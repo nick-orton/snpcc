@@ -20,17 +20,28 @@ send mute signal to client with name
   - unmute
   - volume <value>
 
+### Development Instructions
+Virtualenv: 
+
+    $ . ./venv/bin/activate
+
+#### Build
+
+    $ pip install --editable .
+    $ snpcc
 
 ### TODOs
 
 - better code for command line args
 - pretty status with colors
 - help args
-- build binary as installable package
 - config file with server address
   - default localhost
 - man page
 - publish
+
+### Dependencies Libraries
+snapcast: https://github.com/happyleavesaoc/python-snapcast
 
 ### Notes
 
