@@ -1,9 +1,23 @@
-Command line client for [Snapcast](https://github.com/badaix/snapcast)
+Shell interfaces for [Snapcast](https://github.com/badaix/snapcast)
 
-## Features
+inspired by mpc and ncmpc
 
-### Commands
-- Commands: 
+## ncsnpcc
+
+a curses-based interface
+
+#### Commands
+
+q: quit
+UP/DOWN: select a client
+m: toggle mute
+LEFT/Right: change volume
+
+## snpcc
+
+a cli based interface
+
+#### Commands
   - status
     - styles muted clients as red, unmuted as green
     - default if no command given
@@ -13,7 +27,7 @@ Command line client for [Snapcast](https://github.com/badaix/snapcast)
   - volume <value>
     - Error checking for out of bounds volume
 
-### Configuration
+## Configuration
 
 - $XDG_CONFIG_HOME/snpcc.yml
 
@@ -36,7 +50,10 @@ Virtualenv:
 
 ## TODOs
 
-- curses frontent
+- BUG: wrong name for a client has a funky error in snpcc
+
+- help screen for curses
+- toggle for snpcc
 - man page
 - publish
 
