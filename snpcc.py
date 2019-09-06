@@ -44,6 +44,7 @@ def cli():
 
 @cli.command()
 def status():
+    """ Show the volume levels for every client """
     for client in Api().clients():
           muted_status = "red" if client.muted else "green"
           click.secho(client.friendly_name.ljust(15, ' ') + " "
@@ -63,14 +64,17 @@ def validate_volume(ctx,param, value):
 @click.argument('client')
 @click.argument('volume', callback=validate_volume)
 def volume(client, volume):
+    """ Set CLIENT level to VOLUME [0-100] """
     Api().set_client_status(client, volume, None)
 
 @cli.command()
 @click.argument('client')
 def mute(client):
+    """ Mute the CLIENT """
     _set_mute(True, client)
 
 @cli.command()
 @click.argument('client')
 def unmute(client):
+    """ Unmute the CLIENT """
     _set_mute(False, client)

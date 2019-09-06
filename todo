@@ -34,7 +34,6 @@ Virtualenv:
 
 ### TODOs
 
-- Better help messages
 - default command is status
 - Volumes all lined up no matter what volume level
 - config file with server address
