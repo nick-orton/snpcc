@@ -34,6 +34,8 @@ Virtualenv:
 ### TODOs
 
 - Bar chart for volume levels
+- Better help messages
+- Error checking for out of bounds volume
 - Volumes all lined up no matter what volume level
 - config file with server address
   - default localhost

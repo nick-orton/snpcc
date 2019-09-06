@@ -29,8 +29,14 @@ class Api:
         client = self.client(name)
         client_volume = client.volume if volume is None else volume
         client_muted = client.muted if muted is None else muted
-        self.loop.run_until_complete(self.server.client_volume(client.identifier, {'percent':
-            client_volume, 'muted': client_muted}))
+        self.loop.run_until_complete(self.server.client_volume(
+            client.identifier, {'percent': client_volume,
+                                'muted': client_muted}))
+
+def _volume_string(value):
+    stars = int(value / 2)
+    bars = 50 - stars
+    return "|" + u'\u2588'*stars + " "*bars + "|"
 
 @click.group()
 def cli():
@@ -40,8 +46,8 @@ def cli():
 def status():
     for client in Api().clients():
           muted_status = "red" if client.muted else "green"
-          click.secho(client.friendly_name + " " + str(client.volume),
-                  fg=muted_status)
+          click.secho(client.friendly_name.ljust(15, ' ') + " "
+                  + _volume_string(client.volume), fg=muted_status)
 
 def _set_mute(value, name):
     api = Api()
