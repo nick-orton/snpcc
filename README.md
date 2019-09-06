@@ -1,19 +1,8 @@
-command line client
+Command line client for [Snapcast](https://github.com/badaix/snapcast)
 
-- spcc mute client_name
+## Features
 
-Get Status, match client ids to name
-error if no client with name
-send mute signal to client with name
-
-- spcc unmute client_name
-
-- spcc volume client_name value:0-100
-
-- spcc status
-  - client_name: [muted] volume
-
-### Features
+### Commands
 - Commands: 
   - status
     - styles muted clients as red, unmuted as green
@@ -24,7 +13,12 @@ send mute signal to client with name
   - volume <value>
     - Error checking for out of bounds volume
 
-### Development Instructions
+### Configuration
+
+- $XDG_CONFIG_HOME/snpcc.yml
+
+## Development Instructions
+
 Virtualenv: 
 
     $ . ./venv/bin/activate
@@ -34,15 +28,17 @@ Virtualenv:
     $ pip install --editable .
     $ snpcc
 
-### TODOs
+#### Dependencies
+
+[snapcast](https://github.com/happyleavesaoc/python-snapcast)
+[click](https://click.palletsprojects.com)
+[pyyaml](https://pyyaml.org/wiki/PyYAMLDocumentation)
+
+## TODOs
 
 - curses frontent
 - man page
 - publish
-
-### Dependencies Libraries
-snapcast: https://github.com/happyleavesaoc/python-snapcast
-click: https://click.palletsprojects.com
 
 ### Notes
 
@@ -51,6 +47,4 @@ https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7
 curses tutorial
 https://gist.github.com/claymcleod/b670285f334acd56ad1c
 
-pyyaml
-https://pyyaml.org/wiki/PyYAMLDocumentation
 
