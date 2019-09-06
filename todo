@@ -32,7 +32,6 @@ Virtualenv:
 
 ### TODOs
 
-- better code for command line args
 - pretty status with colors
 - help args
 - config file with server address
@@ -42,6 +41,7 @@ Virtualenv:
 
 ### Dependencies Libraries
 snapcast: https://github.com/happyleavesaoc/python-snapcast
+click: https://click.palletsprojects.com
 
 ### Notes
 
