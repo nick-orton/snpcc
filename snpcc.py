@@ -38,9 +38,11 @@ def _volume_string(value):
     bars = 50 - stars
     return "|" + u'\u2588'*stars + " "*bars + "|"
 
-@click.group()
-def cli():
-    pass
+@click.group(invoke_without_command=True)
+@click.pass_context
+def cli(ctx):
+    if ctx.invoked_subcommand is None:
+       status()
 
 @cli.command()
 def status():

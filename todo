@@ -17,6 +17,8 @@ send mute signal to client with name
 - Commands: 
   - status
     - styles muted clients as red, unmuted as green
+    - default if no command given
+    - volumes all lined up no matter what volume level
   - mute
   - unmute
   - volume <value>
@@ -34,8 +36,6 @@ Virtualenv:
 
 ### TODOs
 
-- default command is status
-- Volumes all lined up no matter what volume level
 - config file with server address
   - default localhost
 - man page
