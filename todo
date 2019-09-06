@@ -36,11 +36,9 @@ Virtualenv:
 
 ### TODOs
 
-- config file with server address
-  - default localhost
+- curses frontent
 - man page
 - publish
-- curses frontent
 
 ### Dependencies Libraries
 snapcast: https://github.com/happyleavesaoc/python-snapcast
@@ -52,4 +50,7 @@ https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7
 
 curses tutorial
 https://gist.github.com/claymcleod/b670285f334acd56ad1c
+
+pyyaml
+https://pyyaml.org/wiki/PyYAMLDocumentation
 
