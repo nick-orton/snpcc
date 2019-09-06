@@ -39,9 +39,9 @@ def cli():
 @cli.command()
 def status():
     for client in Api().clients():
-          muted_status = "M" if client.muted else "*"
-          click.echo(client.friendly_name + " " + muted_status + " " +
-                  str(client.volume))
+          muted_status = "red" if client.muted else "green"
+          click.secho(client.friendly_name + " " + str(client.volume),
+                  fg=muted_status)
 
 def _set_mute(value, name):
     api = Api()
@@ -62,5 +62,3 @@ def mute(client):
 @click.argument('client')
 def unmute(client):
     _set_mute(False, client)
-
-cli.add_command(status)

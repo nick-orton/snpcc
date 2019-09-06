@@ -16,6 +16,7 @@ send mute signal to client with name
 ### Features
 - Commands: 
   - status
+    - styles muted clients as red, unmuted as green
   - mute
   - unmute
   - volume <value>
@@ -32,12 +33,14 @@ Virtualenv:
 
 ### TODOs
 
-- pretty status with colors
-- help args
+- Bar chart for volume levels
+- Volumes all lined up no matter what volume level
 - config file with server address
   - default localhost
 - man page
 - publish
+- curses frontent
+
 
 ### Dependencies Libraries
 snapcast: https://github.com/happyleavesaoc/python-snapcast
