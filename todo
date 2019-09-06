@@ -20,6 +20,7 @@ send mute signal to client with name
   - mute
   - unmute
   - volume <value>
+    - Error checking for out of bounds volume
 
 ### Development Instructions
 Virtualenv: 
@@ -33,16 +34,14 @@ Virtualenv:
 
 ### TODOs
 
-- Bar chart for volume levels
 - Better help messages
-- Error checking for out of bounds volume
+- default command is status
 - Volumes all lined up no matter what volume level
 - config file with server address
   - default localhost
 - man page
 - publish
 - curses frontent
-
 
 ### Dependencies Libraries
 snapcast: https://github.com/happyleavesaoc/python-snapcast

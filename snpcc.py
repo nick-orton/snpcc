@@ -53,11 +53,17 @@ def _set_mute(value, name):
     api = Api()
     api.set_client_status(name, None, value)
 
+def validate_volume(ctx,param, value):
+    volume =  int(value)
+    if(int(value) > 100 or int(value) < 0):
+        raise click.BadParameter("volume must be between 0 and 100")
+    return volume
+
 @cli.command()
 @click.argument('client')
-@click.argument('value')
-def volume(client, value):
-    Api().set_client_status(client, int(value), None)
+@click.argument('volume', callback=validate_volume)
+def volume(client, volume):
+    Api().set_client_status(client, volume, None)
 
 @cli.command()
 @click.argument('client')
