@@ -7,49 +7,51 @@ import click
 
 SERVER = "192.168.86.104"
 
+class Api:
+    def __init__(self):
+        self.loop = asyncio.get_event_loop()
+        self.server = self.loop.run_until_complete(snapcast.control.create_server(self.loop, SERVER))
+
+    def clients(self):
+        return self.server.clients
+
+    def client(self, name):
+        cache = {}
+        for client in self.clients():
+            cache[client.friendly_name] = client
+
+        if(not name in cache):
+            click.echo("No client named " + name)
+            sys.exit()
+        return cache[name]
+
+    def set_client_status(self, name, volume, muted):
+        client = self.client(name)
+        client_volume = client.volume if volume is None else volume
+        client_muted = client.muted if muted is None else muted
+        self.loop.run_until_complete(self.server.client_volume(client.identifier, {'percent':
+            client_volume, 'muted': client_muted}))
+
 @click.group()
 def cli():
     pass
 
-def get_client(name, clients):
-    cache = {}
-    for client in clients:
-        cache[client.friendly_name] = client
-
-    if(not name in cache):
-        click.echo("No client named " + name)
-        sys.exit()
-    return cache[name]
-
-
 @cli.command()
 def status():
-    loop = asyncio.get_event_loop()
-    server = loop.run_until_complete(snapcast.control.create_server(loop, SERVER))
-    for client in server.clients:
+    for client in Api().clients():
           muted_status = "M" if client.muted else "*"
           click.echo(client.friendly_name + " " + muted_status + " " +
                   str(client.volume))
-    sys.exit()
 
 def _set_mute(value, name):
-    loop = asyncio.get_event_loop()
-    server = loop.run_until_complete(snapcast.control.create_server(loop, SERVER))
-    client = get_client(name, server.clients)
-    loop.run_until_complete(server.client_volume(client.identifier, {'percent':
-        client.volume, 'muted': value}))
-    sys.exit()
+    api = Api()
+    api.set_client_status(name, None, value)
 
 @cli.command()
 @click.argument('client')
 @click.argument('value')
 def volume(client, value):
-    loop = asyncio.get_event_loop()
-    server = loop.run_until_complete(snapcast.control.create_server(loop, SERVER))
-    sp_client = get_client(client, server.clients)
-    loop.run_until_complete(server.client_volume(sp_client.identifier, {'percent':
-        int(value)}))
-    sys.exit()
+    Api().set_client_status(client, int(value), None)
 
 @cli.command()
 @click.argument('client')
@@ -61,8 +63,4 @@ def mute(client):
 def unmute(client):
     _set_mute(False, client)
 
-
 cli.add_command(status)
-
-
-if  __name__ =='__main__':main()
