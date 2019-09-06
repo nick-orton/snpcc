@@ -1,0 +1,41 @@
+command line client
+
+- spcc mute client_name
+
+Get Status, match client ids to name
+error if no client with name
+send mute signal to client with name
+
+- spcc unmute client_name
+
+- spcc volume client_name value:0-100
+
+- spcc status
+  - client_name: [muted] volume
+
+### Features
+- Commands: 
+  - status
+  - mute
+  - unmute
+  - volume <value>
+
+
+### TODOs
+
+- better code for command line args
+- pretty status with colors
+- help args
+- build binary as installable package
+- config file with server address
+  - default localhost
+- man page
+- publish
+
+### Notes
+
+https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df
+
+curses tutorial
+https://gist.github.com/claymcleod/b670285f334acd56ad1c
+
