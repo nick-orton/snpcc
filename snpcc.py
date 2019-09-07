@@ -1,5 +1,5 @@
-from snap.snap import Api
-import snap
+from snap import snap
+from snap import status_string
 import click
 
 def _volume_string(value):
@@ -16,9 +16,9 @@ def cli(ctx):
 @cli.command()
 def status():
     """ Show the volume levels for every client """
-    for client in Api().clients():
+    for client in snap.clients():
         muted_status = "red" if client.muted else "green"
-        click.secho(snap.status_string(client), fg=muted_status)
+        click.secho(status_string(client), fg=muted_status)
 
 def validate_volume(ctx,param, value):
     volume =  int(value)
@@ -31,14 +31,12 @@ def validate_volume(ctx,param, value):
 @click.argument('volume', callback=validate_volume)
 def volume(client, volume):
     """ Set CLIENT level to VOLUME [0-100] """
-    api = Api()
-    sc_client = api.client(client)
-    api.set_volume(sc_client, volume)
+    sc_client = snap.client(client)
+    snap.set_volume(sc_client, volume)
 
 def _set_mute(value, name):
-    api = Api()
-    client = api.client(name)
-    api.mute(client, value)
+    client = snap.client(name)
+    snap.mute(client, value)
 
 @cli.command()
 @click.argument('client')

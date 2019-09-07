@@ -1,22 +1,9 @@
 import curses
-from snap.snap import Api
-import snap
+from snap import status_string
+from snap import snap
 import logging
-import os
-import logging
-import logging.handlers
 
-def file_logger():
-    handler = logging.handlers.WatchedFileHandler(os.environ.get("LOGFILE",
-        "/tmp/ncsnpcc.log"))
-    formatter = logging.Formatter(logging.BASIC_FORMAT)
-    handler.setFormatter(formatter)
-    root = logging.getLogger()
-    root.setLevel(os.environ.get("LOGLEVEL", "INFO"))
-    root.addHandler(handler)
-    return logging.getLogger(__name__)
-
-_LOGGER = file_logger()
+_LOGGER = logging.getLogger(__name__)
 
 def draw_clients(stdscr, clients, selected):
     for idx, client in enumerate(clients):
@@ -29,7 +16,7 @@ def draw_clients(stdscr, clients, selected):
         else:
             color = curses.color_pair(4)
 
-        client_display = snap.status_string(client)
+        client_display = status_string(client)
         stdscr.addstr(idx, 0, client_display, color)
 
 def set_cursor(key, clients, selected):
@@ -51,7 +38,7 @@ def initColors():
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
-def change_client(snap, selected, key):
+def change_client(selected, key):
     if key == ord('m'):
        if(selected.muted):
            snap.mute(selected, False)
@@ -72,7 +59,6 @@ def draw_screen(stdscr):
 
     key = 0
 
-    snap = Api()
     clients = snap.clients()
     selected = clients[0]
 
@@ -81,7 +67,7 @@ def draw_screen(stdscr):
 
         selected  = set_cursor(key, clients, selected)
 
-        change_client(snap, selected, key)
+        change_client(selected, key)
 
         # Draw Screen
         draw_clients(stdscr, clients, selected)

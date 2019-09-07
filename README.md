@@ -56,6 +56,7 @@ Virtualenv:
 - toggle for snpcc
 - man page
 - publish
+- get log file from config
 
 ### Notes
 
