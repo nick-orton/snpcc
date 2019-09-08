@@ -14,7 +14,6 @@ setup(
     entry_points={
         'console_scripts': [
             'snpcc=snpcc:cli',
-            'ncsnpcc=ncsnpcc:main',
         ],
     },
 )

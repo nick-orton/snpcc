@@ -2,22 +2,13 @@ Shell interfaces for [Snapcast](https://github.com/badaix/snapcast)
 
 inspired by mpc and ncmpc
 
-## ncsnpcc
-
-a curses-based interface
-
-#### Commands
-
-q: quit
-UP/DOWN: select a client
-m: toggle mute
-LEFT/Right: change volume
-
 ## snpcc
 
 a cli based interface
 
 #### Commands
+  - curses
+    - opens a curses based interface
   - status
     - styles muted clients as red, unmuted as green
     - default if no command given
@@ -26,6 +17,16 @@ a cli based interface
   - unmute
   - volume <value>
     - Error checking for out of bounds volume
+  - running without any commands executes curses
+
+#### Curses Commands
+
+q: quit
+UP/DOWN: select a client
+m: toggle mute
+LEFT/Right: change volume
+curses - open curse-based interface
+
 
 ## Configuration
 

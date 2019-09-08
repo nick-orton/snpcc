@@ -1,5 +1,6 @@
 from snap import snap
 from snap import status_string
+import ncsnpcc
 import click
 
 def _volume_string(value):
@@ -11,7 +12,7 @@ def _volume_string(value):
 @click.pass_context
 def cli(ctx):
     if ctx.invoked_subcommand is None:
-       status()
+       curses()
 
 @cli.command()
 def status():
@@ -49,3 +50,10 @@ def mute(client):
 def unmute(client):
     """ Unmute the CLIENT """
     _set_mute(False, client)
+
+@cli.command()
+def curses():
+    ncsnpcc.main()
+
+
+
