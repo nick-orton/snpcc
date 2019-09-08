@@ -1,6 +1,6 @@
 from snap import snap
+from snap import curses as app
 from snap import status_string
-import ncsnpcc
 import click
 
 def _volume_string(value):
@@ -53,7 +53,7 @@ def unmute(client):
 
 @cli.command()
 def curses():
-    ncsnpcc.main()
+    app.main()
 
 
 
