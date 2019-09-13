@@ -22,9 +22,9 @@ def draw_clients(stdscr, clients, selected):
 def set_cursor(key, clients, selected):
 
     y = clients.index(selected)
-    if key == curses.KEY_DOWN:
+    if key in [curses.KEY_DOWN, ord('j')]:
         y = y + 1
-    elif key == curses.KEY_UP:
+    elif key in [curses.KEY_UP, ord('k')]:
         y = y - 1
 
     y = max(0, y)
@@ -44,10 +44,10 @@ def change_client(selected, key):
            snap.mute(selected, False)
        else:
            snap.mute(selected, True)
-    if key == curses.KEY_LEFT:
+    if key in [curses.KEY_LEFT, ord('h')]:
        volume = max(0, selected.volume - 5)
        snap.set_volume(selected, volume)
-    if key == curses.KEY_RIGHT:
+    if key in [curses.KEY_RIGHT, ord('l')]:
        volume = min(100, selected.volume + 5)
        snap.set_volume(selected, volume)
 
