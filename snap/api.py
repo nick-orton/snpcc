@@ -32,7 +32,7 @@ class Api:
             cache[client.friendly_name] = client
 
         if(not name in cache):
-            click.echo("No client named " + name)
+            raise Exception("No client named " + name)
             sys.exit()
         return cache[name]
 

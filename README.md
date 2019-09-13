@@ -51,8 +51,6 @@ Virtualenv:
 
 ## TODOs
 
-- BUG: wrong name for a client has a funky error in snpcc
-
 - help screen for curses
 - toggle for snpcc
 - man page
