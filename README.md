@@ -51,6 +51,7 @@ Virtualenv:
 
 ## TODOs
 
+- choose stream
 - help screen for curses
 - toggle for snpcc
 - man page
