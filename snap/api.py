@@ -40,7 +40,7 @@ class Api:
         for stream in self.server.streams:
             if stream.status == "playing":
                 return stream
-        raise "No Stream?"
+        return None
 
     def client(self, name):
         cache = {}
