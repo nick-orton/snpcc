@@ -35,7 +35,9 @@ curses - open curse-based interface
 ## Development Instructions
 
 Virtualenv: 
-
+    
+    $ pip install --user virtualenv
+    $ ~/.local/bin/virtualenv venv
     $ . ./venv/bin/activate
 
 #### Build

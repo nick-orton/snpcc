@@ -5,19 +5,18 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-def draw_clients(stdscr, clients, selected):
+def draw_clients(stdscr, y_offset, clients, selected):
     for idx, client in enumerate(clients):
         #_LOGGER.info("%s :: %s", type(client), client.muted)
         if selected == client:
             color = curses.color_pair(1)
         elif client.muted:
             color = curses.color_pair(2)
-            print(client.muted)
         else:
             color = curses.color_pair(4)
 
         client_display = status_string(client)
-        stdscr.addstr(idx, 0, client_display, color)
+        stdscr.addstr(y_offset + idx, 0, client_display, color)
 
 def set_cursor(key, clients, selected):
 
@@ -51,6 +50,14 @@ def change_client(selected, key):
        volume = min(100, selected.volume + 5)
        snap.set_volume(selected, volume)
 
+def change_stream(key):
+    if key == ord('s'):
+        idx = snap.streams().index(snap.active_stream) + 1
+        if idx >= len(snap.streams()):
+            idx = 0
+        snap.set_stream(snap.streams()[idx])
+
+
 def draw_screen(stdscr):
     _LOGGER.info("Starting ncsnpcc")
     initColors()
@@ -60,25 +67,36 @@ def draw_screen(stdscr):
     key = 0
 
     clients = snap.clients()
-    selected = clients[0]
+    client = clients[0]
 
     while (key != ord('q')):
         stdscr.clear()
 
-        selected  = set_cursor(key, clients, selected)
+        client  = set_cursor(key, clients, client)
 
-        change_client(selected, key)
+        change_client(client, key)
+        change_stream(key)
 
         # Draw Screen
-        draw_clients(stdscr, clients, selected)
-        draw_status_bar(stdscr, selected.friendly_name)
+        draw_streams(stdscr, 0,  snap.active_stream)
+        draw_clients(stdscr, 2, clients, client)
+        draw_status_bar(stdscr)
         stdscr.refresh()
 
         key = stdscr.getch()
 
-def draw_status_bar(stdscr, cursor_y):
+def draw_streams(stdscr, y_offset, active_stream):
+    out = "Streams: "
+    for stream in snap.streams():
+        if stream == active_stream:
+            out += "[ {} ] ".format(active_stream.name)
+        else:
+            out += "{} ".format(stream.name)
+    stdscr.addstr(y_offset, 0, out)
+
+def draw_status_bar(stdscr):
     height, width = stdscr.getmaxyx()
-    statusbarstr = "Press 'q' to exit | STATUS BAR | Pos: {}".format(cursor_y)
+    statusbarstr = "Press 'q' to exit , 'hjkl' for volume , or 's' to change stream"
     stdscr.attron(curses.color_pair(3))
     stdscr.addstr(height-1, 0, statusbarstr)
     stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
