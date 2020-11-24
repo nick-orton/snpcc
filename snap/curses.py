@@ -31,7 +31,7 @@ class MainScreen():
         self.stdscr = stdscr
 
     def draw(self, state):
-        out = "Streams: "
+        out = "Streams:        "
         for stream in state.streams:
             if stream == state.active_stream:
                 out += "[ {} ] ".format(stream.name)
