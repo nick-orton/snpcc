@@ -18,18 +18,6 @@ def draw_clients(stdscr, y_offset, clients, selected):
         client_display = status_string(client)
         stdscr.addstr(y_offset + idx, 0, client_display, color)
 
-def set_cursor(key, clients, selected):
-
-    y = clients.index(selected)
-    if key in [curses.KEY_DOWN, ord('j')]:
-        y = y + 1
-    elif key in [curses.KEY_UP, ord('k')]:
-        y = y - 1
-
-    y = max(0, y)
-    y = min(len(clients)-1, y)
-    return clients[y]
-
 def initColors():
     curses.start_color()
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
@@ -37,26 +25,62 @@ def initColors():
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
-def change_client(selected, key):
+def handle_keypress(key, state):
+    if key in [curses.KEY_DOWN, ord('j')]:
+        state.next_client()
+    if key in [curses.KEY_UP, ord('k')]:
+        state.prev_client()
     if key == ord('m'):
-       if(selected.muted):
-           snap.mute(selected, False)
-       else:
-           snap.mute(selected, True)
+       state.toggle_mute()
     if key in [curses.KEY_LEFT, ord('h')]:
-       volume = max(0, selected.volume - 5)
-       snap.set_volume(selected, volume)
+       state.lower_volume()
     if key in [curses.KEY_RIGHT, ord('l')]:
-       volume = min(100, selected.volume + 5)
-       snap.set_volume(selected, volume)
-
-def change_stream(key):
+        state.raise_volume()
     if key == ord('s'):
-        idx = snap.streams().index(snap.active_stream) + 1
-        if idx >= len(snap.streams()):
-            idx = 0
-        snap.set_stream(snap.streams()[idx])
+        state.next_stream()
 
+class State():
+    """ Representation of the application state. Methods for modifying state.  """
+    def __init__(self):
+        self.clients = snap.server.clients
+        self.client = self.clients[0]
+        self.active_stream = snap.get_active_stream()
+        self.streams = snap.server.streams
+
+    def next_stream(self):
+        if(self.active_stream):
+            idx = self.streams.index(self.active_stream) + 1
+            if idx >= len(self.streams):
+                idx = 0
+            stream = self.streams[idx]
+            snap.set_stream(stream)
+            self.active_stream = stream
+
+    def next_client(self):
+        y = self.clients.index(self.client)
+        y = y + 1
+        y = min(len(self.clients)-1, y)
+        self.client = self.clients[y]
+
+    def prev_client(self):
+        y = self.clients.index(self.client)
+        y = y - 1
+        y = max(0, y)
+        self.client = self.clients[y]
+
+    def toggle_mute(self):
+       if(self.client.muted):
+           snap.mute(self.client, False)
+       else:
+           snap.mute(self.client, True)
+
+    def lower_volume(self):
+       volume = max(0, self.client.volume - 5)
+       snap.set_volume(self.client, volume)
+
+    def raise_volume(self):
+       volume = min(100, self.client.volume + 5)
+       snap.set_volume(self.client, volume)
 
 def draw_screen(stdscr):
     _LOGGER.info("Starting ncsnpcc")
@@ -66,28 +90,23 @@ def draw_screen(stdscr):
 
     key = 0
 
-    clients = snap.clients()
-    client = clients[0]
+    state = State()
 
     while (key != ord('q')):
         stdscr.clear()
 
-        client  = set_cursor(key, clients, client)
-
-        change_client(client, key)
-        change_stream(key)
-
+        handle_keypress(key, state)
         # Draw Screen
-        draw_streams(stdscr, 0,  snap.active_stream)
-        draw_clients(stdscr, 2, clients, client)
+        draw_streams(stdscr, 0, state.streams, state.active_stream)
+        draw_clients(stdscr, 2, state.clients, state.client)
         draw_status_bar(stdscr)
         stdscr.refresh()
 
         key = stdscr.getch()
 
-def draw_streams(stdscr, y_offset, active_stream):
+def draw_streams(stdscr, y_offset, streams, active_stream):
     out = "Streams: "
-    for stream in snap.streams():
+    for stream in streams:
         if stream == active_stream:
             out += "[ {} ] ".format(active_stream.name)
         else:

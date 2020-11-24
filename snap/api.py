@@ -22,26 +22,18 @@ class Api:
         addr = server_address()
         self.loop = asyncio.get_event_loop()
         self.server = self.loop.run_until_complete(snapcast.control.create_server(self.loop, addr))
-        self.active_stream = self._init_active_stream()
-
-    def clients(self):
-        return self.server.clients
-
-    def streams(self):
-        return self.server.streams
 
     def set_stream(self, stream):
         group_id = self.server.groups[0].identifier
         self.loop.run_until_complete(self.server.group_stream(group_id,
             stream.identifier))
-        self.active_stream = stream
 
-    def _init_active_stream(self):
-        for stream in self.server.streams:
-            if stream.status == "playing":
-                return stream
-        return None
+    def get_active_stream(self):
+        group = self.server.groups[0]
+        stream_id = group.stream
+        return self.server.stream(stream_id)
 
+    #TODO delete me
     def client(self, name):
         cache = {}
         for client in self.clients():
