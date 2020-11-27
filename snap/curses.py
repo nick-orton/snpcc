@@ -65,20 +65,21 @@ class HelpScreen():
         self.stdscr = stdscr
     def draw(self, state):
         self.stdscr.addstr(0, 0, "Navigation")
-        self.stdscr.addstr(1, 0, "-------")
+        self.stdscr.addstr(1, 0, "----------")
         self.stdscr.addstr(2, 0, "       ")
         self.stdscr.addstr(3, 0, "1     Help Screen (this screen)")
         self.stdscr.addstr(4, 0, "2     Main Screen")
         self.stdscr.addstr(5, 0, "3     Client Screen")
         self.stdscr.addstr(6, 0, "q     quit application")
         self.stdscr.addstr(7, 0, "       ")
-        self.stdscr.addstr(8, 0, "Main Screen")
-        self.stdscr.addstr(9, 0, "-----------")
+        self.stdscr.addstr(8, 0, "Commands")
+        self.stdscr.addstr(9, 0, "--------")
         self.stdscr.addstr(10, 0, "           ")
-        self.stdscr.addstr(11, 0, "j,k   change active client")
-        self.stdscr.addstr(12, 0, "s     change active stream")
+        self.stdscr.addstr(11, 0, "j,k   change selected client")
+        self.stdscr.addstr(12, 0, "s     change selected stream")
         self.stdscr.addstr(13, 0, "h     lower volume on selected client")
         self.stdscr.addstr(14, 0, "l     raise volume on selected client")
+        self.stdscr.addstr(15, 0, "l     mute/unmute selected client")
 
     def draw_status_bar(self):
         height, width = self.stdscr.getmaxyx()
@@ -87,6 +88,30 @@ class HelpScreen():
         self.stdscr.addstr(height-1, 0, statusbarstr)
         self.stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
         self.stdscr.attroff(curses.color_pair(3))
+
+class ClientScreen():
+    def __init__(self, stdscr):
+        self.stdscr = stdscr
+    def draw(self, state):
+        self.stdscr.addstr(0, 0, "Client")
+        self.stdscr.addstr(1, 0, "------")
+        self.stdscr.addstr(2, 0, "       ")
+        self.stdscr.addstr(3, 0, "Name          {}".format(state.client.name))
+        self.stdscr.addstr(4, 0, "Identifier    {}".format(state.client.identifier))
+        self.stdscr.addstr(5, 0, "Volume        {}".format(state.client.volume))
+        self.stdscr.addstr(6, 0, "Muted         {}".format(state.client.muted))
+        self.stdscr.addstr(7, 0, "Latency       {}".format(state.client.latency))
+        self.stdscr.addstr(8, 0, "Stream        {}".format(state.client.group.stream))
+        self.stdscr.addstr(9, 0, "Version       {}".format(state.client.version))
+
+    def draw_status_bar(self):
+        height, width = self.stdscr.getmaxyx()
+        statusbarstr = "Press 'q' to exit "
+        self.stdscr.attron(curses.color_pair(3))
+        self.stdscr.addstr(height-1, 0, statusbarstr)
+        self.stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
+        self.stdscr.attroff(curses.color_pair(3))
+
 
 def draw_screen(stdscr):
     _LOGGER.info("Starting ncsnpcc")
@@ -104,10 +129,13 @@ def draw_screen(stdscr):
 
         handle_keypress(key, state)
 
+#TODO: Move into mmethod
         if key == ord('1'):
             screen = HelpScreen(stdscr)
         if key == ord('2'):
             screen = MainScreen(stdscr)
+        if key == ord('3'):
+            screen = ClientScreen(stdscr)
 
         screen.draw(state)
         screen.draw_status_bar()
