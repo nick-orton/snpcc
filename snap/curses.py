@@ -12,7 +12,7 @@ def initColors():
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
-def handle_keypress(key, state):
+def update_state_from_keypress(key, state):
     if key in [curses.KEY_DOWN, ord('j')]:
         state.next_client()
     if key in [curses.KEY_UP, ord('k')]:
@@ -40,15 +40,14 @@ def draw_screen(stdscr):
 
     key = 0
 
-    screen = MainScreen()
-    state = State(screen)
+    state = State(MainScreen())
 
     while (key != ord('q')):
         stdscr.clear()
 
-        handle_keypress(key, state)
+        update_state_from_keypress(key, state)
 
-        state.screen.drawS(state, stdscr)
+        state.screen.draw(state, stdscr)
         stdscr.refresh()
 
         key = stdscr.getch()

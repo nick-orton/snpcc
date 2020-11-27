@@ -4,11 +4,12 @@ class Screen():
     def __init__(self, name):
         self.name = name
 
-    def drawS(self, state, stdscr):
+    def draw(self, state, stdscr):
         self.draw_title(stdscr)
-        self.draw(state, stdscr)
+        self.content(state, stdscr)
         self.draw_status_bar(stdscr)
 
+    #TODO: The title looks bad now, fix
     def draw_title(self, stdscr):
         stdscr.addstr(0, 0, "{}".format(self.name))
 
@@ -23,21 +24,21 @@ class Screen():
 
 def _volume_string(value):
     stars = int(value / 2)
-    bars = 50 - stars
-    return "|" + u'\u2588'*stars + " "*bars + "|"
+    spaces = 50 - stars
+    return "|" + u'\u2588'*stars + " "*spaces + "|"
 
+#TODO: make this a margin on the longest client name
 def _status_string(client):
     name = client.friendly_name.ljust(15, ' ')
-    return "{} {}".format(name, _volume_string(client.volume))
+    return "{}{}".format(name, _volume_string(client.volume))
 
 
 class MainScreen(Screen):
     def __init__(self):
         super().__init__("Main")
 
-
-    def draw(self, state, stdscr):
-        out = "Streams         "
+    def content(self, state, stdscr):
+        out = "Streams".ljust(15, ' ')
         for stream in state.streams:
             if stream == state.active_stream:
                 out += "[ {} ] ".format(stream.name)
@@ -46,6 +47,7 @@ class MainScreen(Screen):
         stdscr.addstr(3, 0, out)
 
         for idx, client in enumerate(state.clients):
+            #TODO: add non-color representation of mutedness and selectedness
             if state.client == client:
                 color = curses.color_pair(1)
             elif client.muted:
@@ -56,14 +58,12 @@ class MainScreen(Screen):
             client_display = _status_string(client)
             stdscr.addstr(5 + idx, 0, client_display, color)
 
-
-
-
+#TODO: Move this into some kind of template
 class HelpScreen(Screen):
     def __init__(self):
         super().__init__("Help")
 
-    def draw(self, state, stdscr):
+    def content(self, state, stdscr):
         stdscr.addstr(3, 0, "Navigation")
         stdscr.addstr(4, 0, "----------")
         stdscr.addstr(5, 0, "       ")
@@ -85,7 +85,7 @@ class ClientScreen(Screen):
     def __init__(self):
         super().__init__("Client")
 
-    def draw(self, state, stdscr):
+    def content(self, state, stdscr):
         stdscr.addstr(3, 0, "Client")
         stdscr.addstr(4, 0, "------")
         stdscr.addstr(5, 0, "       ")
@@ -94,7 +94,5 @@ class ClientScreen(Screen):
         stdscr.addstr(8, 0, "Volume        {}".format(state.client.volume))
         stdscr.addstr(9, 0, "Muted         {}".format(state.client.muted))
         stdscr.addstr(10, 0, "Latency       {}".format(state.client.latency))
-        stdscr.addstr(11, 0, "Stream        {}".format(state.client.group.stream))
+        stdscr.addstr(11, 0, "Stream        {}".format(state.active_stream.name))
         stdscr.addstr(12, 0, "Version       {}".format(state.client.version))
-
-
