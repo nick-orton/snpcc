@@ -6,11 +6,13 @@ _LOGGER = logging.getLogger(__name__)
 
 class State():
     """ Representation of the application state. Methods for modifying state.  """
-    def __init__(self):
+    def __init__(self, screen):
         self.clients = snap.server.clients
         self.client = self.clients[0]
         self.active_stream = snap.get_active_stream()
         self.streams = snap.server.streams
+        self.screen = screen
+
 
     def next_stream(self):
         if(self.active_stream):
