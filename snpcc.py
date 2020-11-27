@@ -1,6 +1,5 @@
 from snap import snap
 from snap import curses as app
-from snap import status_string
 import click
 
 def _volume_string(value):
@@ -13,13 +12,6 @@ def _volume_string(value):
 def cli(ctx):
     if ctx.invoked_subcommand is None:
        curses()
-
-@cli.command()
-def status():
-    """ Show the volume levels for every client """
-    for client in snap.clients():
-        muted_status = "red" if client.muted else "green"
-        click.secho(status_string(client), fg=muted_status)
 
 def validate_volume(ctx,param, value):
     volume =  int(value)
