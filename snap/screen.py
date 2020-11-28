@@ -1,4 +1,5 @@
 import curses
+from string import Template
 
 class Screen():
     def __init__(self, name):
@@ -58,39 +59,56 @@ class MainScreen(Screen):
             client_display = _status_string(client)
             stdscr.addstr(5 + idx, 0, client_display, color)
 
-#TODO: Move this into some kind of template
+HELP_SCREEN_TEXT = """
+Navigation
+----------
+
+  1     Help Screen (this screen)
+  2     Main Screen
+  3     Client Screen
+  q     quit application
+
+Commands
+--------
+
+  j,k   change selected client
+  s     change selected stream
+  h     lower volume on selected client
+  l     raise volume on selected client
+  m     mute/unmute selected client
+  a     mute/unmute all clients"""
+
+
 class HelpScreen(Screen):
     def __init__(self):
         super().__init__("Help")
 
     def content(self, state, stdscr):
-        stdscr.addstr(3, 0, "Navigation")
-        stdscr.addstr(4, 0, "----------")
-        stdscr.addstr(5, 0, "       ")
-        stdscr.addstr(6, 0, "1     Help Screen (this screen)")
-        stdscr.addstr(7, 0, "2     Main Screen")
-        stdscr.addstr(8, 0, "3     Client Screen")
-        stdscr.addstr(9, 0, "q     quit application")
-        stdscr.addstr(10, 0, "       ")
-        stdscr.addstr(11, 0, "Commands")
-        stdscr.addstr(12, 0, "--------")
-        stdscr.addstr(13, 0, "           ")
-        stdscr.addstr(14, 0, "j,k   change selected client")
-        stdscr.addstr(15, 0, "s     change selected stream")
-        stdscr.addstr(16, 0, "h     lower volume on selected client")
-        stdscr.addstr(17, 0, "l     raise volume on selected client")
-        stdscr.addstr(18, 0, "m     mute/unmute selected client")
-        stdscr.addstr(19, 0, "a     mute/unmute all clients")
+        for idx,line in enumerate(HELP_SCREEN_TEXT.splitlines()):
+            stdscr.addstr(2+idx, 0, line)
+
+CLIENT_SCREEN = """
+Name          $name
+Identifier    $identifier
+Volume        $volume
+Muted         $muted
+Latency       $latency
+Stream        $active_stream
+Version       $version"""
 
 class ClientScreen(Screen):
     def __init__(self):
         super().__init__("Client")
 
     def content(self, state, stdscr):
-        stdscr.addstr(3, 0, "Name          {}".format(state.client.name))
-        stdscr.addstr(4, 0, "Identifier    {}".format(state.client.identifier))
-        stdscr.addstr(5, 0, "Volume        {}".format(state.client.volume))
-        stdscr.addstr(6, 0, "Muted         {}".format(state.client.muted))
-        stdscr.addstr(7, 0, "Latency       {}".format(state.client.latency))
-        stdscr.addstr(8, 0, "Stream        {}".format(state.active_stream.name))
-        stdscr.addstr(9, 0, "Version       {}".format(state.client.version))
+        template = Template(CLIENT_SCREEN)
+        vals = template.substitute(name=state.client.name,
+                                   identifier=state.client.identifier,
+                                   volume=state.client.volume,
+                                   muted=state.client.muted,
+                                   latency=state.client.latency,
+                                   active_stream=state.active_stream.name,
+                                   version=state.client.version)
+
+        for idx,line in enumerate(vals.splitlines()):
+            stdscr.addstr(2+idx, 0, line)
