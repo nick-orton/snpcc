@@ -30,7 +30,10 @@ def _volume_string(value):
 
 #TODO: make this a margin on the longest client name
 def _status_string(client):
-    name = client.friendly_name.ljust(15, ' ')
+    name = client.friendly_name
+    if(client.muted):
+        name = "{} (m)".format(name)
+    name = name.ljust(15, ' ')
     return "{}{}".format(name, _volume_string(client.volume))
 
 
