@@ -12,6 +12,7 @@ def initColors():
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
+#TODO 'a' for mute all
 def update_state_from_keypress(key, state):
     if key in [curses.KEY_DOWN, ord('j')]:
         state.next_client()
@@ -19,6 +20,8 @@ def update_state_from_keypress(key, state):
         state.prev_client()
     if key == ord('m'):
         state.toggle_mute()
+    if key == ord('a'):
+        state.mute_all()
     if key in [curses.KEY_LEFT, ord('h')]:
         state.lower_volume()
     if key in [curses.KEY_RIGHT, ord('l')]:

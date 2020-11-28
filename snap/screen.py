@@ -79,20 +79,18 @@ class HelpScreen(Screen):
         stdscr.addstr(15, 0, "s     change selected stream")
         stdscr.addstr(16, 0, "h     lower volume on selected client")
         stdscr.addstr(17, 0, "l     raise volume on selected client")
-        stdscr.addstr(18, 0, "l     mute/unmute selected client")
+        stdscr.addstr(18, 0, "m     mute/unmute selected client")
+        stdscr.addstr(19, 0, "a     mute/unmute all clients")
 
 class ClientScreen(Screen):
     def __init__(self):
         super().__init__("Client")
 
     def content(self, state, stdscr):
-        stdscr.addstr(3, 0, "Client")
-        stdscr.addstr(4, 0, "------")
-        stdscr.addstr(5, 0, "       ")
-        stdscr.addstr(6, 0, "Name          {}".format(state.client.name))
-        stdscr.addstr(7, 0, "Identifier    {}".format(state.client.identifier))
-        stdscr.addstr(8, 0, "Volume        {}".format(state.client.volume))
-        stdscr.addstr(9, 0, "Muted         {}".format(state.client.muted))
-        stdscr.addstr(10, 0, "Latency       {}".format(state.client.latency))
-        stdscr.addstr(11, 0, "Stream        {}".format(state.active_stream.name))
-        stdscr.addstr(12, 0, "Version       {}".format(state.client.version))
+        stdscr.addstr(3, 0, "Name          {}".format(state.client.name))
+        stdscr.addstr(4, 0, "Identifier    {}".format(state.client.identifier))
+        stdscr.addstr(5, 0, "Volume        {}".format(state.client.volume))
+        stdscr.addstr(6, 0, "Muted         {}".format(state.client.muted))
+        stdscr.addstr(7, 0, "Latency       {}".format(state.client.latency))
+        stdscr.addstr(8, 0, "Stream        {}".format(state.active_stream.name))
+        stdscr.addstr(9, 0, "Version       {}".format(state.client.version))

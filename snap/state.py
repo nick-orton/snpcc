@@ -41,6 +41,18 @@ class State():
        else:
            snap.mute(self.client, True)
 
+    def mute_all(self):
+        all_muted = True
+        for client in snap.server.clients:
+            if not client.muted:
+                all_muted = False
+        if not all_muted:
+            for client in snap.server.clients:
+                snap.mute(client, True)
+        else:
+            for client in snap.server.clients:
+                snap.mute(client, False)
+
     def lower_volume(self):
        volume = max(0, self.client.volume - 5)
        snap.set_volume(self.client, volume)
