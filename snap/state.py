@@ -26,13 +26,15 @@ class State():
     def next_client(self):
         y = self.clients.index(self.client)
         y = y + 1
-        y = min(len(self.clients)-1, y)
+        if(y >= len(self.clients)):
+            y = 0
         self.client = self.clients[y]
 
     def prev_client(self):
         y = self.clients.index(self.client)
         y = y - 1
-        y = max(0, y)
+        if(y < 0):
+            y = len(self.clients)-1
         self.client = self.clients[y]
 
     def toggle_mute(self):
