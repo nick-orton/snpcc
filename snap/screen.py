@@ -1,21 +1,32 @@
+""" Module for drawing the applicaiton screens """
+import abc
 import curses
 from string import Template
 
-class Screen():
+class Screen(metaclass=abc.ABCMeta):
+    """ Superclass for all screens"""
     def __init__(self, name):
         self.name = name
 
     def draw(self, state, stdscr):
+        """ Draws the screen in three parts, title, content, status-bar."""
         self.draw_title(stdscr)
         self.content(state, stdscr)
-        self.draw_status_bar(stdscr)
+        Screen.draw_status_bar(stdscr)
+
+    @abc.abstractmethod
+    def content(self, state, stdscr):
+        """ Draw the content for the screen. """
 
     def draw_title(self, stdscr):
-        height, width = stdscr.getmaxyx()
+        """ Draw the screen title """
+        _, width = stdscr.getmaxyx()
         stdscr.addstr(0, 0, "{}".format(self.name), curses.A_BOLD)
         stdscr.hline(1,0, curses.ACS_HLINE, width)
 
-    def draw_status_bar(self, stdscr):
+    @staticmethod
+    def draw_status_bar(stdscr):
+        """ Draw the screen footer """
         height, width = stdscr.getmaxyx()
         statusbarstr = "Press 'q' to exit, '1' for help "
         stdscr.attron(curses.color_pair(3))
@@ -32,13 +43,14 @@ def _volume_string(value):
 #TODO: make this a margin on the longest client name
 def _status_string(client):
     name = client.friendly_name
-    if(client.muted):
+    if client.muted:
         name = "{} (m)".format(name)
     name = name.ljust(15, ' ')
     return "{}{}".format(name, _volume_string(client.volume))
 
 
 class MainScreen(Screen):
+    """ Displays the streams, clients, and their volume """
     def __init__(self):
         super().__init__("Main")
 
@@ -52,7 +64,7 @@ class MainScreen(Screen):
         stdscr.addstr(3, 0, out)
 
         for idx, client in enumerate(state.clients):
-            #TODO: add non-color representation of mutedness and selectedness
+            #TODO: add non-color representation of selectedness
             if state.client == client:
                 color = curses.color_pair(1)
             elif client.muted:
@@ -84,6 +96,7 @@ Commands
 
 
 class HelpScreen(Screen):
+    """ Instructions for how to use snpcc """
     def __init__(self):
         super().__init__("Help")
 
@@ -101,6 +114,7 @@ Stream        $active_stream
 Version       $version"""
 
 class ClientScreen(Screen):
+    """ Display details about the currently selected client"""
     def __init__(self):
         super().__init__("Client")
 

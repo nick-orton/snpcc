@@ -1,19 +1,22 @@
+""" Encapsulates ncurses logic and runs the primary event loop """
+
 import curses
+import logging
 from snap.state import State
 from snap.screen import MainScreen, HelpScreen, ClientScreen
-import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-def initColors():
+def init_colors():
+    """ Initialize the color scheme for the application """
     curses.start_color()
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
-#TODO 'a' for mute all
 def update_state_from_keypress(key, state):
+    """ Handle keyboard input """
     if key in [curses.KEY_DOWN, ord('j')]:
         state.next_client()
     if key in [curses.KEY_UP, ord('k')]:
@@ -36,8 +39,9 @@ def update_state_from_keypress(key, state):
         state.screen = ClientScreen()
 
 def draw_screen(stdscr):
+    """ Main event loop.  Listens for keystrokes and draws the screen. """
     _LOGGER.info("Starting ncsnpcc")
-    initColors()
+    init_colors()
     stdscr.clear()
     stdscr.refresh()
 
@@ -45,7 +49,7 @@ def draw_screen(stdscr):
 
     state = State(MainScreen())
 
-    while (key != ord('q')):
+    while key != ord('q'):
         stdscr.clear()
 
         update_state_from_keypress(key, state)
@@ -56,4 +60,5 @@ def draw_screen(stdscr):
         key = stdscr.getch()
 
 def main():
+    """ Wraps the main event loop in curses wrapper. """
     curses.wrapper(draw_screen)

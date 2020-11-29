@@ -1,6 +1,6 @@
-
-from snap import snap
+""" Stateful controll of the snapcast server """
 import logging
+from snap import snap
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -15,7 +15,8 @@ class State():
 
 
     def next_stream(self):
-        if(self.active_stream):
+        """ Get the next stream from available streams """
+        if self.active_stream:
             idx = self.streams.index(self.active_stream) + 1
             if idx >= len(self.streams):
                 idx = 0
@@ -24,28 +25,35 @@ class State():
             self.active_stream = stream
 
     def next_client(self):
-        y = self.clients.index(self.client)
-        y = y + 1
-        if(y >= len(self.clients)):
-            y = 0
-        self.client = self.clients[y]
+        """ Get the next client from available clients relative to the
+        currently selected client """
+        idx = self.clients.index(self.client)
+        idx = idx + 1
+        if idx >= len(self.clients):
+            idx = 0
+        self.client = self.clients[idx]
 
     def prev_client(self):
-        y = self.clients.index(self.client)
-        y = y - 1
-        if(y < 0):
-            y = len(self.clients)-1
-        self.client = self.clients[y]
+        """ Get the previous client from the available clients relative to the
+        currently selected client """
+        idx = self.clients.index(self.client)
+        idx = idx - 1
+        if idx < 0:
+            idx = len(self.clients)-1
+        self.client = self.clients[idx]
 
     def toggle_mute(self):
-       if(self.client.muted):
-           snap.mute(self.client, False)
-       else:
-           snap.mute(self.client, True)
+        """ Mute if unmuted or vice-versa """
+        if self.client.muted:
+            snap.mute(self.client, False)
+        else:
+            snap.mute(self.client, True)
 
     def mute_all(self):
+        """ Mute all the clients if any are unmuted.  Unmute all the clients if
+        all are muted. """
         all_muted = True
-        for client in snap.server.clients:
+        for client in self.clients:
             if not client.muted:
                 all_muted = False
         if not all_muted:
@@ -56,11 +64,11 @@ class State():
                 snap.mute(client, False)
 
     def lower_volume(self):
-       volume = max(0, self.client.volume - 5)
-       snap.set_volume(self.client, volume)
+        """ Reduce the volume by 5% """
+        volume = max(0, self.client.volume - 5)
+        snap.set_volume(self.client, volume)
 
     def raise_volume(self):
-       volume = min(100, self.client.volume + 5)
-       snap.set_volume(self.client, volume)
-
-
+        """ Increase the volume by 5% """
+        volume = min(100, self.client.volume + 5)
+        snap.set_volume(self.client, volume)

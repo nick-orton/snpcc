@@ -1,6 +1,7 @@
+""" Application base module.  Defines CLI commands"""
+import click
 from snap import snap
 from snap import curses as app
-import click
 
 def _volume_string(value):
     stars = int(value / 2)
@@ -10,22 +11,9 @@ def _volume_string(value):
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
+    """Application entry point."""
     if ctx.invoked_subcommand is None:
-       curses()
-
-def validate_volume(ctx,param, value):
-    volume =  int(value)
-    if(int(value) > 100 or int(value) < 0):
-        raise click.BadParameter("volume must be between 0 and 100")
-    return volume
-
-@cli.command()
-@click.argument('client')
-@click.argument('volume', callback=validate_volume)
-def volume(client, volume):
-    """ Set CLIENT level to VOLUME [0-100] """
-    sc_client = snap.client(client)
-    snap.set_volume(sc_client, volume)
+        curses()
 
 def _set_mute(value, name):
     client = snap.client(name)
@@ -35,17 +23,15 @@ def _set_mute(value, name):
 @click.argument('client')
 def mute(client):
     """ Mute the CLIENT """
-    _set_mute(True, client)
+    snap.mute(snap.client(client), True)
 
 @cli.command()
 @click.argument('client')
 def unmute(client):
     """ Unmute the CLIENT """
-    _set_mute(False, client)
+    snap.mute(snap.client(client), False)
 
 @cli.command()
 def curses():
+    """Launch the TUI"""
     app.main()
-
-
-
