@@ -10,9 +10,10 @@ class Screen():
         self.content(state, stdscr)
         self.draw_status_bar(stdscr)
 
-    #TODO: The title looks bad now, fix
     def draw_title(self, stdscr):
-        stdscr.addstr(0, 0, "{}".format(self.name))
+        height, width = stdscr.getmaxyx()
+        stdscr.addstr(0, 0, "{}".format(self.name), curses.A_BOLD)
+        stdscr.hline(1,0, curses.ACS_HLINE, width)
 
     def draw_status_bar(self, stdscr):
         height, width = stdscr.getmaxyx()

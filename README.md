@@ -56,9 +56,6 @@ Virtualenv:
 - man page
 - lint it
 - color the streams
-- Style the page header
-  - horizontal line under title
-  - bright white on title
 - publish
 - get log file from config
 
