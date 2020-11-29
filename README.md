@@ -65,8 +65,6 @@ Virtualenv:
 - color the streams
 - publish
 - get log file from config
-- mutall from cli
-- cli help command
 - man page
 
 ### Notes

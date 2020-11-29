@@ -1,37 +1,36 @@
 """ Application base module.  Defines CLI commands"""
 import click
-from snap import snap
+from snap.state import State
 from snap import curses as app
-
-def _volume_string(value):
-    stars = int(value / 2)
-    bars = 50 - stars
-    return "|" + u'\u2588'*stars + " "*bars + "|"
 
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
-    """Application entry point."""
+    """
+    Command line client for controlling a Snapcast server
+
+    If invoked without commands, snpcc launches the TUI
+    see: https://github.com/badaix/snapcast for more details
+
+    """
     if ctx.invoked_subcommand is None:
         curses()
 
-def _set_mute(value, name):
-    client = snap.client(name)
-    snap.mute(client, value)
-
-@cli.command()
-@click.argument('client')
-def mute(client):
-    """ Mute the CLIENT """
-    snap.mute(snap.client(client), True)
-
-@cli.command()
-@click.argument('client')
-def unmute(client):
-    """ Unmute the CLIENT """
-    snap.mute(snap.client(client), False)
-
 @cli.command()
 def curses():
-    """Launch the TUI"""
+    """Launch the TUI (default command)"""
     app.main()
+
+@cli.command()
+def mute():
+    """ Toggle muting/unmuting"""
+    state = State(None)
+    state.mute_all()
+
+@cli.command("list")
+def list_clients():
+    """ List all clients and volumes """
+    state = State(None)
+    for client in state.clients:
+        vol = "muted" if client.muted else client.volume
+        print("{} {}".format(client.friendly_name, vol))
