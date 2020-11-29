@@ -29,25 +29,20 @@ class Screen(metaclass=abc.ABCMeta):
         """ Draw the screen footer """
         height, width = stdscr.getmaxyx()
         statusbarstr = "Press 'q' to exit, '1' for help "
-        stdscr.attron(curses.color_pair(3))
+        stdscr.hline(height-2,0, curses.ACS_HLINE, width)
         stdscr.addstr(height-1, 0, statusbarstr)
-        stdscr.addstr(height-1, len(statusbarstr), " " * (width - len(statusbarstr) - 1))
-        stdscr.attroff(curses.color_pair(3))
-
 
 def _volume_string(value):
     stars = int(value / 2)
     spaces = 50 - stars
     return "|" + u'\u2588'*stars + " "*spaces + "|"
 
-#TODO: make this a margin on the longest client name
-def _status_string(client):
+def _status_string(client, max_len):
     name = client.friendly_name
     if client.muted:
         name = "{} (m)".format(name)
-    name = name.ljust(15, ' ')
+    name = name.ljust(max_len + 8, ' ')
     return "{}{}".format(name, _volume_string(client.volume))
-
 
 class MainScreen(Screen):
     """ Displays the streams, clients, and their volume """
@@ -55,7 +50,9 @@ class MainScreen(Screen):
         super().__init__("Main")
 
     def content(self, state, stdscr):
-        out = "Streams".ljust(15, ' ')
+        max_client_name_len = max([len(client.friendly_name) for client in
+            state.clients])
+        out = "Streams".ljust(max_client_name_len + 8, ' ')
         for stream in state.streams:
             if stream == state.active_stream:
                 out += "[ {} ] ".format(stream.name)
@@ -64,7 +61,6 @@ class MainScreen(Screen):
         stdscr.addstr(3, 0, out)
 
         for idx, client in enumerate(state.clients):
-            #TODO: add non-color representation of selectedness
             if state.client == client:
                 color = curses.color_pair(1)
             elif client.muted:
@@ -72,7 +68,7 @@ class MainScreen(Screen):
             else:
                 color = curses.color_pair(4)
 
-            client_display = _status_string(client)
+            client_display = _status_string(client, max_client_name_len)
             stdscr.addstr(5 + idx, 0, client_display, color)
 
 HELP_SCREEN_TEXT = """

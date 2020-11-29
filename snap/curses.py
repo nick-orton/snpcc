@@ -38,7 +38,7 @@ def update_state_from_keypress(key, state):
     if key == ord('3'):
         state.screen = ClientScreen()
 
-def draw_screen(stdscr):
+def event_loop(stdscr):
     """ Main event loop.  Listens for keystrokes and draws the screen. """
     _LOGGER.info("Starting ncsnpcc")
     init_colors()
@@ -61,4 +61,4 @@ def draw_screen(stdscr):
 
 def main():
     """ Wraps the main event loop in curses wrapper. """
-    curses.wrapper(draw_screen)
+    curses.wrapper(event_loop)
