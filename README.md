@@ -19,14 +19,23 @@ a cli based interface
     - Error checking for out of bounds volume
   - running without any commands executes curses
 
-#### Curses Commands
+#### TUI Commands
 
-q: quit
-UP/DOWN: select a client
-m: toggle mute
-LEFT/Right: change volume
-curses - open curse-based interface
+##### Navigation
 
+  1     Help Screen 
+  2     Main Screen - clients and volumes
+  3     Client Screen - client details
+  q     quit application
+
+##### Commands
+
+  j,k   change selected client
+  s     change selected stream
+  h     lower volume on selected client
+  l     raise volume on selected client
+  m     mute/unmute selected client
+  a     mute/unmute all clients"""
 
 ## Configuration
 
@@ -53,17 +62,17 @@ Virtualenv:
 
 ## TODOs
 
-- man page
-- lint it
 - color the streams
 - publish
 - get log file from config
+- mutall from cli
+- cli help command
+- man page
 
 ### Notes
 
 https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df
 
-curses tutorial
-https://gist.github.com/claymcleod/b670285f334acd56ad1c
+(curses tutorial)[https://gist.github.com/claymcleod/b670285f334acd56ad1c]
 
 
