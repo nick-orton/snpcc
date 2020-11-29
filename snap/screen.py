@@ -37,8 +37,10 @@ def _volume_string(value):
     spaces = 50 - stars
     return "|" + u'\u2588'*stars + " "*spaces + "|"
 
-def _status_string(client, max_len):
+def _status_string(client, max_len, selected):
     name = client.friendly_name
+    if selected:
+        name = "[{}]".format(name)
     if client.muted:
         name = "{} (m)".format(name)
     name = name.ljust(max_len + 8, ' ')
@@ -55,20 +57,23 @@ class MainScreen(Screen):
         out = "Streams".ljust(max_client_name_len + 8, ' ')
         for stream in state.streams:
             if stream == state.active_stream:
-                out += "[ {} ] ".format(stream.name)
+                out += "[{}] ".format(stream.name)
             else:
                 out += "{} ".format(stream.name)
         stdscr.addstr(3, 0, out)
 
         for idx, client in enumerate(state.clients):
+            selected = False
             if state.client == client:
                 color = curses.color_pair(1)
+                selected = True
             elif client.muted:
                 color = curses.color_pair(2)
             else:
                 color = curses.color_pair(4)
 
-            client_display = _status_string(client, max_client_name_len)
+            client_display = _status_string(client, max_client_name_len,
+                    selected)
             stdscr.addstr(5 + idx, 0, client_display, color)
 
 HELP_SCREEN_TEXT = """
