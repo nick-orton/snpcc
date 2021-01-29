@@ -62,6 +62,7 @@ Virtualenv:
 
 ## TODOs
 
+- Button to refresh screen
 - color the streams
 - publish
 - get log file from config
