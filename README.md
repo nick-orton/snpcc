@@ -9,15 +9,9 @@ a cli based interface
 #### Commands
   - curses
     - opens a curses based interface
-  - status
-    - styles muted clients as red, unmuted as green
-    - default if no command given
-    - volumes all lined up no matter what volume level
+    - default if no command is chosen
   - mute
-  - unmute
-  - volume <value>
-    - Error checking for out of bounds volume
-  - running without any commands executes curses
+    - toggles the mute state of all clients
 
 #### TUI Commands
 
