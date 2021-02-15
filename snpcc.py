@@ -1,7 +1,7 @@
 """ Application base module.  Defines CLI commands"""
 import click
 from snap.state import State
-from snap import curses as app
+from snap import tui as app
 
 @click.group(invoke_without_command=True)
 @click.pass_context
