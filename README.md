@@ -56,6 +56,9 @@ Virtualenv:
 
 ## TODOs
 
+- Refactoring
+  - better use of asyncio. (use run)  Does API need to be an object?
+  - better initializations of Singletons.
 - Button to refresh screen
 - color the streams
 - publish

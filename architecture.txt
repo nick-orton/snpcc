@@ -1,0 +1,21 @@
+Architecture
+============
+
+## Modules
+
+ snpcc.py       -> The 'main' class
+
+ snap/tui.py    -> Runs the event loop, captures input and delegates to state
+                   management and screen-drawing modules.
+
+ snap/screen.py -> Objects that represent the different screens of the app.
+                   Given a reference to state and the cureses-screen, they
+                   will draw themselves.
+
+ snap/state.py  -> An object representing the client and server state.  Has
+                   command functions which dispatch to the API wrapper for 
+                   execution and updates the state.
+
+ snap/api.py    -> Handles the Low level communication with the snapcast
+                   clients. This module does little more than wrap the async
+                   calls.
