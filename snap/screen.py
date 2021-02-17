@@ -131,3 +131,8 @@ class ClientScreen(Screen):
 
         for idx,line in enumerate(vals.splitlines()):
             stdscr.addstr(2+idx, 0, line)
+
+class Screens():
+    main_screen = MainScreen()
+    help_screen = HelpScreen()
+    client_screen = ClientScreen()

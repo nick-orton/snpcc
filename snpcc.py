@@ -1,7 +1,31 @@
 """ Application base module.  Defines CLI commands"""
 import click
+import os
+import yaml
 from snap.state import State
-from snap import tui as app
+from snap.api import Api
+from snap import tui
+
+def server_address():
+    """ get the server address from the config file """
+    if 'APPDATA' in os.environ:
+        confighome = os.environ['APPDATA']
+    elif 'XDG_CONFIG_HOME' in os.environ:
+        confighome = os.environ['XDG_CONFIG_HOME']
+    else:
+        confighome = os.path.join(os.environ['HOME'], '.config')
+    configpath = os.path.join(confighome, 'snpcc.yml')
+    try:
+        config = yaml.safe_load(open(configpath))
+        return config["server"]
+    except FileNotFoundError:
+        return "localhost"
+
+def init_state():
+  """ initialize the singletons """
+  state = State(Api(server_address()))
+  return state
+
 
 @click.group(invoke_without_command=True)
 @click.pass_context
@@ -19,18 +43,19 @@ def cli(ctx):
 @cli.command()
 def curses():
     """Launch the TUI (default command)"""
-    app.main()
+    state = init_state()
+    tui.main(state)
 
 @cli.command()
 def mute():
     """ Toggle muting/unmuting"""
-    state = State(None)
+    state = init_state()
     state.mute_all()
 
 @cli.command("list")
 def list_clients():
     """ List all clients and volumes """
-    state = State(None)
+    state = init_state()
     for client in state.clients:
         vol = "muted" if client.muted else client.volume
         print("{} {}".format(client.friendly_name, vol))

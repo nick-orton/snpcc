@@ -2,30 +2,12 @@
 
 This implementation assumes that there is only one group defined
 """
-import os
 import asyncio
 import snapcast.control
-import yaml
-
-def server_address():
-    """ get the server address from the config file """
-    if 'APPDATA' in os.environ:
-        confighome = os.environ['APPDATA']
-    elif 'XDG_CONFIG_HOME' in os.environ:
-        confighome = os.environ['XDG_CONFIG_HOME']
-    else:
-        confighome = os.path.join(os.environ['HOME'], '.config')
-    configpath = os.path.join(confighome, 'snpcc.yml')
-    try:
-        config = yaml.safe_load(open(configpath))
-        return config["server"]
-    except FileNotFoundError:
-        return "localhost"
 
 class Api:
     """ Client for Snapcast server """
-    def __init__(self):
-        addr = server_address()
+    def __init__(self, addr):
         self.loop = asyncio.get_event_loop()
         self.server = self.loop.run_until_complete(snapcast.control.create_server(self.loop, addr))
 

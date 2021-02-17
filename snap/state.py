@@ -1,17 +1,18 @@
 """ Stateful controll of the snapcast server """
 import logging
-from snap import snap
+from snap.screen import Screens
 
 _LOGGER = logging.getLogger(__name__)
 
 class State():
     """ Representation of the application state. Methods for modifying state.  """
-    def __init__(self, screen):
-        self.clients = snap.server.clients
+    def __init__(self, api):
+        self.clients = api.server.clients
+        self.api = api
         self.client = self.clients[0]
-        self.active_stream = snap.get_active_stream()
-        self.streams = snap.server.streams
-        self.screen = screen
+        self.active_stream = api.get_active_stream()
+        self.streams = api.server.streams
+        self.screen = Screens.main_screen
 
 
     def next_stream(self):
@@ -21,7 +22,7 @@ class State():
             if idx >= len(self.streams):
                 idx = 0
             stream = self.streams[idx]
-            snap.set_stream(stream)
+            self.api.set_stream(stream)
             self.active_stream = stream
 
     def next_client(self):
@@ -45,9 +46,9 @@ class State():
     def toggle_mute(self):
         """ Mute if unmuted or vice-versa """
         if self.client.muted:
-            snap.mute(self.client, False)
+            self.api.mute(self.client, False)
         else:
-            snap.mute(self.client, True)
+            self.api.mute(self.client, True)
 
     def mute_all(self):
         """ Mute all the clients if any are unmuted.  Unmute all the clients if
@@ -57,18 +58,18 @@ class State():
             if not client.muted:
                 all_muted = False
         if not all_muted:
-            for client in snap.server.clients:
-                snap.mute(client, True)
+            for client in self.api.server.clients:
+                self.api.mute(client, True)
         else:
-            for client in snap.server.clients:
-                snap.mute(client, False)
+            for client in self.api.server.clients:
+                self.api.mute(client, False)
 
     def lower_volume(self):
         """ Reduce the volume by 5% """
         volume = max(0, self.client.volume - 5)
-        snap.set_volume(self.client, volume)
+        self.api.set_volume(self.client, volume)
 
     def raise_volume(self):
         """ Increase the volume by 5% """
         volume = min(100, self.client.volume + 5)
-        snap.set_volume(self.client, volume)
+        self.api.set_volume(self.client, volume)

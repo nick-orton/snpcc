@@ -3,8 +3,6 @@
 import os
 import logging
 import logging.handlers
-from snap.api import Api
-
 
 def file_logger():
     """ initialize file logger """
@@ -17,5 +15,3 @@ def file_logger():
     root.addHandler(handler)
 
 file_logger()
-
-snap = Api()
