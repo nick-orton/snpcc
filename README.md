@@ -24,12 +24,13 @@ a cli based interface
 
 ##### Commands
 
-  j,k   change selected client
-  s     change selected stream
-  h     lower volume on selected client
-  l     raise volume on selected client
-  m     mute/unmute selected client
-  a     mute/unmute all clients"""
+  j,k      change selected client
+  s        change selected stream
+  h        lower volume on selected client
+  l        raise volume on selected client
+  m        mute/unmute selected client
+  a        mute/unmute all clients"""
+  space    refreshes the state
 
 ## Configuration
 
@@ -56,6 +57,7 @@ Virtualenv:
 
 ## TODOs
 
+- button that just refeshes the state
 - Refactoring
   - better use of asyncio. (use run)  Does API need to be an object?
   - better initializations of Singletons.

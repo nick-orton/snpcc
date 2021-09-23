@@ -30,3 +30,9 @@ class Api:
     def set_volume(self, client, percent):
         """ Set volume for a client """
         self.loop.run_until_complete(client.set_volume(percent))
+
+    def refresh(self, client):
+        """ No Op that refreshes the server state """
+        # HACK - didn't see a better way to do a no-op that refreshes state
+        i = client.volume
+        self.loop.run_until_complete(client.set_volume(i))

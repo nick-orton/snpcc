@@ -50,6 +50,10 @@ class State():
         else:
             self.api.mute(self.client, True)
 
+    def refresh(self):
+        """ refresh the server state in case was changed elsewhere """
+        self.api.refresh(self.client)
+
     def mute_all(self):
         """ Mute all the clients if any are unmuted.  Unmute all the clients if
         all are muted. """

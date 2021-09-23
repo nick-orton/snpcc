@@ -88,12 +88,13 @@ Navigation
 Commands
 --------
 
-  j,k   change selected client
-  s     change selected stream
-  h     lower volume on selected client
-  l     raise volume on selected client
-  m     mute/unmute selected client
-  a     mute/unmute all clients"""
+  j,k     change selected client
+  s       change selected stream
+  h       lower volume on selected client
+  l       raise volume on selected client
+  m       mute/unmute selected client
+  a       mute/unmute all clients
+  space   refresh the screen"""
 
 
 class HelpScreen(Screen):

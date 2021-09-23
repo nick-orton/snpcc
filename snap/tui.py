@@ -22,6 +22,8 @@ def update_state_from_keypress(key, state):
         state.next_client()
     if key in [curses.KEY_UP, ord('k')]:
         state.prev_client()
+    if key == ord(' '):
+        state.refresh()
     if key == ord('m'):
         state.toggle_mute()
     if key == ord('a'):
