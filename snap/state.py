@@ -68,12 +68,29 @@ class State():
             for client in self.api.server.clients:
                 self.api.mute(client, False)
 
+    @staticmethod
+    def change_vol(client, api, amt):
+        """ Helper method for volume reduction"""
+        volume = client.volume + amt
+        volume = max(0, volume)
+        volume = min(100, volume)
+        api.set_volume(client, volume)
+
     def lower_volume(self):
         """ Reduce the volume by 5% """
-        volume = max(0, self.client.volume - 5)
-        self.api.set_volume(self.client, volume)
+        State.change_vol(self.client, self.api, -5)
+
+    def lower_volume_all(self):
+        """ Reduce the volume for all clients """
+        for client in self.clients:
+            State.change_vol(client, self.api, -5)
 
     def raise_volume(self):
         """ Increase the volume by 5% """
-        volume = min(100, self.client.volume + 5)
-        self.api.set_volume(self.client, volume)
+        State.change_vol(self.client, self.api, 5)
+
+    def raise_volume_all(self):
+        """ Increase the volume for all clients """
+        for client in self.clients:
+            State.change_vol(client, self.api, 5)
+

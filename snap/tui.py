@@ -30,8 +30,12 @@ def update_state_from_keypress(key, state):
         state.mute_all()
     if key in [curses.KEY_LEFT, ord('h')]:
         state.lower_volume()
+    if key == ord('H'):
+        state.lower_volume_all()
     if key in [curses.KEY_RIGHT, ord('l')]:
         state.raise_volume()
+    if key == ord('L'):
+        state.raise_volume_all()
     if key == ord('s'):
         state.next_stream()
     if key == ord('1'):

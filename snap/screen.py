@@ -92,6 +92,8 @@ Commands
   s       change selected stream
   h       lower volume on selected client
   l       raise volume on selected client
+  H       lower volume on all clients
+  L       raise volume on all clients
   m       mute/unmute selected client
   a       mute/unmute all clients
   space   refresh the screen"""
