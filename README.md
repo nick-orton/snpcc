@@ -57,11 +57,10 @@ Virtualenv:
 
 ## TODOs
 
-- button that just refeshes the state
+- Capital H/L changes volume for all clients
 - Refactoring
   - better use of asyncio. (use run)  Does API need to be an object?
   - better initializations of Singletons.
-- Button to refresh screen
 - color the streams
 - publish
 - get log file from config
