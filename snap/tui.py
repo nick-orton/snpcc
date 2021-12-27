@@ -38,7 +38,7 @@ def update_state_from_keypress(key, state):
         state.raise_volume_all()
     if key == ord('s'):
         state.next_stream()
-    if key == ord('1'):
+    if key in [ord('1'), ord('?')]:
         state.screen = Screens.help_screen
     if key == ord('2'):
         state.screen = Screens.main_screen
