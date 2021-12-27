@@ -59,6 +59,7 @@ Virtualenv:
 
 ## TODOs
 
+- Bug.  Stream display doesn't refresh if changed by another device
 - Refactoring
   - better use of asyncio. (use run)  Does API need to be an object?
   - better initializations of Singletons.
