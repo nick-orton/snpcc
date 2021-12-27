@@ -17,7 +17,7 @@ a cli based interface
 
 ##### Navigation
 
-  1     Help Screen 
+  1,?   Help Screen 
   2     Main Screen - clients and volumes
   3     Client Screen - client details
   q     quit application
@@ -59,7 +59,7 @@ Virtualenv:
 
 ## TODOs
 
-- Bug.  Stream display doesn't refresh if changed by another device
+- Make 'M' do all clients for symmetry with H,L
 - Refactoring
   - better use of asyncio. (use run)  Does API need to be an object?
   - better initializations of Singletons.

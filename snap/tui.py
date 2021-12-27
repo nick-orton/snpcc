@@ -59,6 +59,7 @@ def build_loop(state):
 
       while key != ord('q'):
           stdscr.clear()
+          state.clear_cache()
 
           update_state_from_keypress(key, state)
 

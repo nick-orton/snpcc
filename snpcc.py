@@ -23,7 +23,7 @@ def server_address():
 
 def init_state():
   """ initialize the singletons """
-  state = State(Api(server_address()))
+  state = State(server_address())
   return state
 
 

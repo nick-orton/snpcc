@@ -52,19 +52,20 @@ class MainScreen(Screen):
         super().__init__("Main")
 
     def content(self, state, stdscr):
+        clients = state.clients()
         max_client_name_len = max([len(client.friendly_name) for client in
-            state.clients])
+            clients])
         out = "Streams".ljust(max_client_name_len + 8, ' ')
-        for stream in state.streams:
-            if stream == state.active_stream:
+        for stream in state.streams():
+            if stream.identifier == state.active_stream().identifier:
                 out += "[{}] ".format(stream.name)
             else:
                 out += "{} ".format(stream.name)
         stdscr.addstr(3, 0, out)
 
-        for idx, client in enumerate(state.clients):
+        for idx, client in enumerate(clients):
             selected = False
-            if state.client == client:
+            if state.client.identifier == client.identifier:
                 color = curses.color_pair(1)
                 selected = True
             elif client.muted:
@@ -129,7 +130,7 @@ class ClientScreen(Screen):
                                    volume=state.client.volume,
                                    muted=state.client.muted,
                                    latency=state.client.latency,
-                                   active_stream=state.active_stream.name,
+                                   active_stream=state.active_stream().name,
                                    version=state.client.version)
 
         for idx,line in enumerate(vals.splitlines()):
