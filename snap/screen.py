@@ -81,7 +81,7 @@ HELP_SCREEN_TEXT = """
 Navigation
 ----------
 
-  1     Help Screen (this screen)
+  1,?   Help Screen (this screen)
   2     Main Screen
   3     Client Screen
   q     quit application
