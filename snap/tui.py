@@ -7,7 +7,6 @@ from snap.screen import Screens
 
 _LOGGER = logging.getLogger(__name__)
 
-
 def init_colors():
     """ Initialize the color scheme for the application """
     curses.start_color()
@@ -26,7 +25,7 @@ def update_state_from_keypress(key, state):
         state.refresh()
     if key == ord('m'):
         state.toggle_mute()
-    if key == ord('a'):
+    if key in [ord('a'), ord('M')]:
         state.mute_all()
     if key in [curses.KEY_LEFT, ord('h')]:
         state.lower_volume()
@@ -55,7 +54,6 @@ def build_loop(state):
       stdscr.refresh()
 
       key = 0
-
 
       while key != ord('q'):
           stdscr.clear()

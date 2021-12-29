@@ -59,10 +59,8 @@ Virtualenv:
 
 ## TODOs
 
-- Make 'M' do all clients for symmetry with H,L
 - Refactoring
   - better use of asyncio. (use run)  Does API need to be an object?
-  - better initializations of Singletons.
 - color the streams
 - publish
 - get log file from config
