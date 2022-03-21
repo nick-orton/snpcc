@@ -31,16 +31,6 @@ class Api:
             stream.identifier))
         self.active_stream = stream
 
-    @staticmethod
-    def mute(client, status):
-        """ Mute a client """
-        Api._run(client.set_muted(status))
-
-    @staticmethod
-    def set_volume(client, percent):
-        """ Set volume for a client """
-        Api._run(client.set_volume(percent))
-
     def refresh(self, client):
         """ No Op that refreshes the server state """
         # HACK - didn't see a better way to do a no-op that refreshes state

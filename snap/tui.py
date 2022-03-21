@@ -24,15 +24,15 @@ def update_state_from_keypress(key, state):
     if key == ord(' '):
         state.refresh()
     if key == ord('m'):
-        state.toggle_mute()
+        state.client.toggle_mute()
     if key in [ord('a'), ord('M')]:
         state.mute_all()
     if key in [curses.KEY_LEFT, ord('h')]:
-        state.lower_volume()
+        state.client.lower_volume()
     if key == ord('H'):
         state.lower_volume_all()
     if key in [curses.KEY_RIGHT, ord('l')]:
-        state.raise_volume()
+        state.client.raise_volume()
     if key == ord('L'):
         state.raise_volume_all()
     if key == ord('s'):

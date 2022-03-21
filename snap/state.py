@@ -2,6 +2,7 @@
 import logging
 from snap.screen import Screens
 from snap.api import Api
+from snap.client import Client
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ class State():
             by identifier """
         clients = self._api().server.clients
         clients.sort(key=lambda c: c.identifier)
-        return clients
+        return [Client(client) for client in clients]
 
     def get_client(self, idx):
         """ Return the client with the specified index
@@ -87,13 +88,6 @@ class State():
             idx = len(clients)-1
         self.client = clients[idx]
 
-    def toggle_mute(self):
-        """ Mute if unmuted or vice-versa """
-        if self.client.muted:
-            Api.mute(self.client, False)
-        else:
-            Api.mute(self.client, True)
-
     def refresh(self):
         """ refresh the server state in case was changed elsewhere """
         self._api().refresh(self.client)
@@ -107,40 +101,18 @@ class State():
                 all_muted = False
         if not all_muted:
             for client in self.clients():
-                Api.mute(client, True)
+                client.mute(True)
         else:
             for client in self.clients():
-                Api.mute(client, False)
-
-    @staticmethod
-    def _change_vol(client, api, amt):
-        """ Helper function for volume reduction"""
-        volume = client.volume + amt
-        volume = max(0, volume)
-        volume = min(100, volume)
-        Api.set_volume(client, volume)
-
-    def lower_volume(self, client=None):
-        """ Reduce the volume by 5% """
-        if client:
-            State._change_vol(client, self._api(), -5)
-        else:
-            State._change_vol(self.client, self._api(), -5)
+                client.mute(False)
 
     def lower_volume_all(self):
         """ Reduce the volume for all clients """
         for client in self.clients():
-            State._change_vol(client, self._api(), -5)
-
-    def raise_volume(self, client=None):
-        """ Increase the volume by 5% """
-        if client:
-            State._change_vol(client, self._api(), 5)
-        else:
-            State._change_vol(self.client, self._api(), 5)
+            client.lower_volume()
 
     def raise_volume_all(self):
         """ Increase the volume for all clients """
         for client in self.clients():
-            State._change_vol(client, self._api(), 5)
+            client.raise_volume()
 

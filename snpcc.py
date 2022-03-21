@@ -57,7 +57,7 @@ def mute(client_num=None):
     else:
         idx = int(client_num) - 1 # convert from 1-based to 0-based index
         client = state.get_client(idx)
-        Api.mute(client, not(client.muted))
+        client.toggle_mute()
         print("Muted: {}".format(client.friendly_name))
 
 @cli.command()
@@ -86,7 +86,7 @@ def down(client_num=None):
     else:
         idx = int(client_num) - 1 # convert from 1-based to 0-based index
         client = state.get_client(idx)
-        state.lower_volume(client)
+        client.lower_volume()
         vol = "MUTE" if client.muted else client.volume
         print("{} {}".format(client.friendly_name, vol))
 
