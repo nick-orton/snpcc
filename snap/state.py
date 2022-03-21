@@ -120,18 +120,24 @@ class State():
         volume = min(100, volume)
         Api.set_volume(client, volume)
 
-    def lower_volume(self):
+    def lower_volume(self, client=None):
         """ Reduce the volume by 5% """
-        State._change_vol(self.client, self._api(), -5)
+        if client:
+            State._change_vol(client, self._api(), -5)
+        else:
+            State._change_vol(self.client, self._api(), -5)
 
     def lower_volume_all(self):
         """ Reduce the volume for all clients """
         for client in self.clients():
             State._change_vol(client, self._api(), -5)
 
-    def raise_volume(self):
+    def raise_volume(self, client=None):
         """ Increase the volume by 5% """
-        State._change_vol(self.client, self._api(), 5)
+        if client:
+            State._change_vol(client, self._api(), 5)
+        else:
+            State._change_vol(self.client, self._api(), 5)
 
     def raise_volume_all(self):
         """ Increase the volume for all clients """
