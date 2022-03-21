@@ -56,6 +56,6 @@ def mute():
 def list_clients():
     """ List all clients and volumes """
     state = init_state()
-    for client in state.clients:
+    for client in state.clients():
         vol = "muted" if client.muted else client.volume
         print("{} {}".format(client.friendly_name, vol))
