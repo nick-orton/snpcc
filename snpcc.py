@@ -49,7 +49,8 @@ def curses():
 @cli.command()
 @click.argument('client_num', required=False)
 def mute(client_num=None):
-    """ Toggle muting/unmuting"""
+    """ Toggle muting/unmuting.  Specify index of client to by toggled or
+        mute/unmute all"""
     state = init_state()
     if(client_num == None):
         state.mute_all()
@@ -65,7 +66,7 @@ def list_clients():
     state = init_state()
     maximum = max([len(client.friendly_name) for client in state.clients()])
     for idx, client in enumerate(state.clients()):
-        vol = "muted" if client.muted else client.volume
+        vol = "--" if client.muted else client.volume
         padding = maximum - len(client.friendly_name)
         display_name = client.friendly_name + " "*padding
         print("{} {} {}".format(idx+1, display_name, vol))
