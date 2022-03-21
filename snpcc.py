@@ -47,18 +47,25 @@ def curses():
     tui.main(state)
 
 @cli.command()
-def mute():
+@click.argument('client_num', required=False)
+def mute(client_num=None):
     """ Toggle muting/unmuting"""
     state = init_state()
-    state.mute_all()
+    if(client_num == None):
+        state.mute_all()
+    else:
+        idx = int(client_num) - 1 # convert from 1-based to 0-based index
+        client = state.get_client(idx)
+        Api.mute(client, not(client.muted))
+        print("Muted: {}".format(client.friendly_name))
 
 @cli.command("list")
 def list_clients():
     """ List all clients and volumes """
     state = init_state()
     maximum = max([len(client.friendly_name) for client in state.clients()])
-    for client in state.clients():
+    for idx, client in enumerate(state.clients()):
         vol = "muted" if client.muted else client.volume
         padding = maximum - len(client.friendly_name)
         display_name = client.friendly_name + " "*padding
-        print("{} {}".format(display_name, vol))
+        print("{} {} {}".format(idx+1, display_name, vol))

@@ -37,9 +37,17 @@ class State():
         return -1 #FIXME Error
 
     def clients(self):
-        """ Return all clients registered with the server """
-        #TODO: sort in a consistent order
-        return self._api().server.clients
+        """ Return all clients registered with the server ordered alphabetically
+            by identifier """
+        clients = self._api().server.clients
+        clients.sort(key=lambda c: c.identifier)
+        return clients
+
+    def get_client(self, idx):
+        """ Return the client with the specified index
+            note: this will not work unless clients() is well ordered """
+        clients = self.clients()
+        return clients[idx]
 
     def streams(self):
         """ All the available streams on the server """
