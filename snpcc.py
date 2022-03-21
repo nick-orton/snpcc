@@ -56,6 +56,9 @@ def mute():
 def list_clients():
     """ List all clients and volumes """
     state = init_state()
+    maximum = max([len(client.friendly_name) for client in state.clients()])
     for client in state.clients():
         vol = "muted" if client.muted else client.volume
-        print("{} {}".format(client.friendly_name, vol))
+        padding = maximum - len(client.friendly_name)
+        display_name = client.friendly_name + " "*padding
+        print("{} {}".format(display_name, vol))
