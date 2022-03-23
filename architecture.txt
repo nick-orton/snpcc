@@ -16,6 +16,9 @@ Architecture
                    command functions which dispatch to the API wrapper for 
                    execution and updates the state.
 
+ snap/client.py -> Object representing a snapchat client on the network.  Wraps
+                   the api client with functions for manipulating volume. 
+
  snap/api.py    -> Handles the Low level communication with the snapcast
                    clients. This module does little more than wrap the async
                    calls.
