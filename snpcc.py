@@ -63,8 +63,7 @@ def mute(client_num=None):
 @cli.command()
 @click.argument('client_num', required=False)
 def up(client_num=None):
-    """ Toggle muting/unmuting.  Specify index of client to by toggled or
-        mute/unmute all"""
+    """ Raise volume by 5% """
     state = init_state()
     if(client_num == None):
         state.raise_volume_all()
@@ -78,8 +77,7 @@ def up(client_num=None):
 @cli.command()
 @click.argument('client_num', required=False)
 def down(client_num=None):
-    """ Toggle muting/unmuting.  Specify index of client to by toggled or
-        mute/unmute all"""
+    """ Lower volume by 5% """
     state = init_state()
     if(client_num == None):
         state.lower_volume_all()
@@ -89,6 +87,7 @@ def down(client_num=None):
         client.lower_volume()
         vol = "MUTE" if client.muted else client.volume
         print("{} {}".format(client.friendly_name, vol))
+
 
 
 @cli.command("list")
