@@ -88,6 +88,14 @@ def down(client_num=None):
         vol = "MUTE" if client.muted else client.volume
         print("{} {}".format(client.friendly_name, vol))
 
+@cli.command()
+@click.argument('name', required=True)
+@click.argument('new_name', required=True)
+def rename(name, new_name):
+    """ Rename a client """
+    state = init_state()
+    client = state.find_by_name(name)
+    client.change_name(new_name)
 
 
 @cli.command("list")

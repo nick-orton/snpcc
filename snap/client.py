@@ -40,6 +40,10 @@ class Client:
         volume = min(100, volume)
         self.set_volume(volume)
 
+    def change_name(self, name):
+        Api._run(self.client.set_name(name))
+
+
     def lower_volume(self):
         """ Reduce the volume by 5% """
         self._change_vol(-5)

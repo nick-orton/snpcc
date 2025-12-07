@@ -50,6 +50,14 @@ class State():
         clients = self.clients()
         return clients[idx]
 
+    def find_by_name(self, name):
+        """ Return the first client with the friendly name that matches """
+        clients = self.clients()
+        for client in clients:
+            if client.friendly_name == name:
+                return client
+        return -1 #FIXME Error
+
     def streams(self):
         """ All the available streams on the server """
         return self._api().server.streams
