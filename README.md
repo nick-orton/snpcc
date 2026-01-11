@@ -1,77 +1,158 @@
-Shell interfaces for [Snapcast](https://github.com/badaix/snapcast)
+# snpcc
 
-inspired by mpc and ncmpc
+**snpcc** is a terminal-based user interface (TUI) and command-line interface
+(CLI) for controlling [Snapcast](https://github.com/badaix/snapcast) servers.
+Inspired by lightweight clients like `mpc` and `ncmpc`, it provides a fast,
+keyboard-driven environment for managing multi-room audio.
 
-## snpcc
+## Prerequisites
 
-a cli based interface
+*   **Python 3.11+**
+*   A running **Snapcast Server** reachable via the network.
+*   A POSIX-compliant terminal (Linux/BSD/macOS).
 
-#### Commands
-  - curses
-    - opens a curses based interface
-    - default if no command is chosen
-  - mute
-    - toggles the mute state of all clients
+## Installation
 
-#### TUI Commands
+Install `snpcc` directly from the source code. Using a virtual environment is
+recommended to isolate dependencies.
 
-##### Navigation
+```bash
+# Clone the repository (if applicable) or navigate to source
+cd /path/to/snpcc
 
-  1,?   Help Screen 
-  2     Main Screen - clients and volumes
-  3     Client Screen - client details
-  q     quit application
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate
 
-##### Commands
-
-  j,k      change selected client
-  s        change selected stream
-  h        lower volume on selected client
-  l        raise volume on selected client
-  H        lower volume on all clients
-  L        raise volume on all clients
-  m        mute/unmute selected client
-  a        mute/unmute all clients"""
-  space    refreshes the state
+# Install in editable mode
+pip install --editable .
+```
 
 ## Configuration
 
-- $XDG_CONFIG_HOME/snpcc.yml
+`snpcc` requires a configuration file to locate your Snapcast server. By
+default, it looks for `snpcc.yml` in your standard configuration directory
+(e.g., `~/.config/` or `$XDG_CONFIG_HOME`).
 
-## Development Instructions
+1.  Create the configuration directory:
+    ```bash
+    mkdir -p ~/.config
+    ```
 
-Virtualenv: 
-    
-    $ pip install --user virtualenv
-    $ ~/.local/bin/virtualenv venv
-    $ . ./venv/bin/activate
+2.  Create the configuration file `~/.config/snpcc.yml`:
+    ```yaml
+    # ~/.config/snpcc.yml
+    server: 192.168.1.50
+    ```
 
-#### Build
+If no configuration file is found, the client defaults to `localhost`.
 
-    $ pip install --editable .
-    $ snpcc
+## Usage: TUI (Interactive Mode)
 
-#### Dependencies
+To launch the interactive Terminal User Interface, run the command without
+arguments:
 
-[snapcast](https://github.com/happyleavesaoc/python-snapcast)
-[click](https://click.palletsprojects.com)
-[pyyaml](https://pyyaml.org/wiki/PyYAMLDocumentation)
+```bash
+snpcc
+```
 
-## TODOs
+### Keybindings
 
-- BUG: If the server ip address is wrong then it just hangs with no error message
-- BUG: stacktrace if no clients connected
-- Refactoring
-  - better use of asyncio. (use run)  Does API need to be an object?
-- color the streams
-- publish
-- get log file from config
-- man page
+**Navigation**
+*   `j` / `k` : Select next/previous client.
+*   `s`     : Cycle through available streams for the selected group.
 
-### Notes
+**Volume Control**
+*   `h`     : Lower volume of selected client (5%).
+*   `l`     : Raise volume of selected client (5%).
+*   `H`     : Lower volume of **all** clients.
+*   `L`     : Raise volume of **all** clients.
 
-https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df
+**State Management**
+*   `m`     : Toggle mute for selected client.
+*   `a` / `M` : Toggle mute for **all** clients.
+*   `Space` : Force refresh the screen/state.
 
-(curses tutorial)[https://gist.github.com/claymcleod/b670285f334acd56ad1c]
+**Screens**
+*   `1` / `?` : Help screen.
+*   `2`     : Main screen (Client list and volumes).
+*   `3`     : Client details screen.
+*   `q`     : Quit application.
 
+## Usage: CLI (Command Line Mode)
+
+You can use `snpcc` for one-off commands and scripting without entering the
+interactive interface.
+
+### List Clients
+Displays an indexed list of connected clients and their current volume.
+
+```bash
+snpcc list
+# Output:
+# 1 Kitchen Speaker  80
+# 2 Living Room      -- (indicates muted)
+```
+
+### Volume Control
+Adjust volume for a specific client using the index provided by the `list`
+command. If no index is provided, the command applies to **all** clients.
+
+```bash
+# Raise volume of client #1 by 5%
+snpcc up 1
+
+# Lower volume of ALL clients by 5%
+snpcc down
+```
+
+### Mute Control
+Toggle the mute state. Like volume controls, omitting the index applies the
+action globally.
+
+```bash
+# Toggle mute for client #2
+snpcc mute 2
+
+# Mute/Unmute ALL clients
+snpcc mute
+```
+
+### Renaming Clients
+Assign a new friendly name to a client. This uses the current name as the
+lookup key.
+
+```bash
+snpcc rename "Kitchen Speaker" "Kitchen"
+```
+
+## Development
+
+To contribute to `snpcc`, set up a development environment.
+
+1.  **Install Dependencies:**
+    ```bash
+    pip install click pyyaml snapcast pylint
+    ```
+
+2.  **Linting:**
+    Ensure code adheres to the project's `.pylintrc` standards.
+    ```bash
+    pylint snpcc.py snap/
+    ```
+
+## Architecture
+
+*   **`snpcc.py`**: Entry point. Handles CLI argument parsing via `click` and
+    initializes state.
+*   **`snap/tui.py`**: Manages the `curses` event loop and input handling.
+*   **`snap/state.py`**: Manages application state, acting as the bridge
+    between the UI and the API.
+*   **`snap/api.py`**: Wraps `asyncio` calls to the `snapcast` library.
+*   **`snap/screen.py`**: Handles drawing logic for specific UI views.
+
+## License
+
+This project is licensed under the GNU General Public License v2.0. See the
+`LICENSE` file for details.
 
