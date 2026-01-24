@@ -1,5 +1,6 @@
 *.swp
-venv
+.venv
 __pycache__
 snpcc.egg-info/
 build/
+.vybz/output
