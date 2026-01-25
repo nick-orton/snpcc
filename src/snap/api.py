@@ -3,13 +3,21 @@
 This implementation assumes that there is only one group defined
 """
 import asyncio
+import socket
 import snapcast.control
+
+class ServerError(Exception):
+    """Raised when connection to Snapcast server fails."""
+    pass
 
 class Api:
     """ Client for Snapcast server """
     def __init__(self, addr):
         self.loop = asyncio.get_event_loop()
-        self.server = self.loop.run_until_complete(snapcast.control.create_server(self.loop, addr))
+        try:
+            self.server = self.loop.run_until_complete(snapcast.control.create_server(self.loop, addr))
+        except (OSError, socket.gaierror, asyncio.TimeoutError) as err:
+            raise ServerError(f"Could not connect to {addr}. Reason: {err}") from err
         self.active_stream = self._get_active_stream()
 
     @staticmethod
