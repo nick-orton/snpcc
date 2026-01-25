@@ -1,9 +1,10 @@
 """ Application base module.  Defines CLI commands"""
 import click
 import os
+import sys
 import yaml
 from snap.state import State
-from snap.api import Api
+from snap.api import Api, ServerError
 from snap import tui
 
 def server_address():
@@ -23,8 +24,12 @@ def server_address():
 
 def init_state():
   """ initialize the singletons """
-  state = State(server_address())
-  return state
+  try:
+      state = State(server_address())
+      return state
+  except ServerError as e:
+      click.echo(str(e), err=True)
+      sys.exit(1)
 
 
 @click.group(invoke_without_command=True)
