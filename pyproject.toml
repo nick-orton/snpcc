@@ -44,8 +44,9 @@ dev = [
 [tool.setuptools]
 package-dir = {"" = "src"}
 py-modules = ["snpcc"]
-# 'packages' is automatically discovered by setuptools in src/
 
+[tool.setuptools.packages.find]
+where = ["src"]
 [tool.pytest.ini_options] 
 testpaths = ["tests"]
 # Force pytest to add 'src' to the python path so 'import snap' works
