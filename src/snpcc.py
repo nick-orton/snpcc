@@ -107,8 +107,11 @@ def rename(name, new_name):
 def list_clients():
     """ List all clients and volumes """
     state = init_state()
-    maximum = max([len(client.friendly_name) for client in state.clients()])
-    for idx, client in enumerate(state.clients()):
+    clients = state.clients()
+    if not clients:
+        return
+    maximum = max([len(client.friendly_name) for client in clients])
+    for idx, client in enumerate(clients):
         vol = "--" if client.muted else client.volume
         padding = maximum - len(client.friendly_name)
         display_name = client.friendly_name + " "*padding
