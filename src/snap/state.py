@@ -11,12 +11,15 @@ class State():
     def __init__(self, address):
         self.address = address
         self.cache = None
-        self.client = self.clients()[0]
+        clients = self.clients()
+        if clients:
+            self.client = clients[0]
+        else:
+            self.client = None
         self.screen = Screens.main_screen
 
     def clear_cache(self):
-        """ Clear out the cached API.  This should be run once per event loop.
-            I'm not happy about leaking that detail out of the state into the
+        """ I'm not happy about leaking that detail out of the state into the
             event loop, but this is a compromise for performance and recency.
         """
         self.cache = None

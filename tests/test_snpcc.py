@@ -49,3 +49,20 @@ def test_cli_config_file_not_found_default_behavior(mocker):
     # Assert
     assert addr == "localhost"
 
+def test_crash_on_no_connected_clients(mock_snapcast_server):
+    """
+    PROVE THE BUG: If the server returns 0 clients, the State constructor
+    crashes with an IndexError because it assumes at least one client exists.
+    """
+    # Arrange: Simulate a server with zero clients
+    mock_snapcast_server.clients = []
+
+    runner = CliRunner()
+
+    # Act: Run the CLI
+    result = runner.invoke(cli, ["list"])
+
+    # Assert: The application doesn't crash
+    assert result.exit_code == 0
+    #assert isinstance(result.exception, IndexError)
+
