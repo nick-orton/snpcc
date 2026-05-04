@@ -2,10 +2,41 @@
 
 import curses
 import logging
+import os
+import subprocess
 from snap.state import State
 from snap.screen import Screens
 
 _LOGGER = logging.getLogger(__name__)
+
+def _set_terminal_title(title):
+    try:
+        with open('/dev/tty', 'w') as tty:
+            tty.write(f"\x1b]2;{title}\x07")
+    except OSError:
+        pass
+
+def _tmux_rename(title):
+    """Rename the current tmux window and disable automatic-rename.
+    Returns the prior automatic-rename value so it can be restored."""
+    try:
+        result = subprocess.run(
+            ['tmux', 'show-window-options', '-v', 'automatic-rename'],
+            capture_output=True, text=True
+        )
+        prior = result.stdout.strip() or 'on'
+        subprocess.run(['tmux', 'set-window-option', 'automatic-rename', 'off'], check=False)
+        subprocess.run(['tmux', 'rename-window', title], check=False)
+    except OSError:
+        prior = None
+    return prior
+
+def _tmux_restore(prior):
+    """Restore automatic-rename to its previous value."""
+    try:
+        subprocess.run(['tmux', 'set-window-option', 'automatic-rename', prior], check=False)
+    except OSError:
+        pass
 
 def init_colors():
     """ Initialize the color scheme for the application """
@@ -69,4 +100,13 @@ def build_loop(state):
 
 def main(state):
     """ Wraps the main event loop in curses wrapper. """
-    curses.wrapper(build_loop(state))
+    if os.environ.get('TMUX'):
+        prior = _tmux_rename("snpcc")
+        try:
+            curses.wrapper(build_loop(state))
+        finally:
+            if prior is not None:
+                _tmux_restore(prior)
+    else:
+        _set_terminal_title("snpcc")
+        curses.wrapper(build_loop(state))
